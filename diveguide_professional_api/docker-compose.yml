@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  web:
+    build: .
+    command: python -m gunicorn diveguide_professional_api.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app
+      - ./www:/www
+    expose:
+      - 8000
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
   db:
     image: mysql:8.0
     environment:
@@ -12,30 +27,16 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - '3306:3306'
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
-    ports:
-      - '8000:8000'
-    depends_on:
-      - db
-    env_file:
-      - .env
-    environment:
-      DB_HOST: db
-      DB_PORT: 3306
   nginx:
     image: nginx:1.19.0
     ports:
       - '80:80'
     volumes:
       - ./config/nginx:/etc/nginx/conf.d
-      - ./static:/usr/share/nginx/html/static
-      - ./media:/usr/share/nginx/html/media
+      - ./www:/www
     depends_on:
       - web
 
 volumes:
   db_data:
+  www:
