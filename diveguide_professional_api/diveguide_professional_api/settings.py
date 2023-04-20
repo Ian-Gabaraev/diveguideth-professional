@@ -24,6 +24,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+if DOCKERIZED:
+    ALLOWED_HOSTS.append(os.environ.get('DROPLET_HOST'))
+
 
 # Application definition
 

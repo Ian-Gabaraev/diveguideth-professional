@@ -9,5 +9,5 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 
 COPY . /code/
-COPY config/nginx.conf /etc/nginx/conf.d/default.conf
+COPY config/nginx/nginx.conf /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
