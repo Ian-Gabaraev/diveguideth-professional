@@ -29,7 +29,7 @@ services:
   nginx:
     image: nginx:1.19.0
     ports:
-      - '6600:6600'
+      - '80:80'
     volumes:
       - ./config/nginx:/etc/nginx/conf.d
       - ./static:/usr/share/nginx/html/static
