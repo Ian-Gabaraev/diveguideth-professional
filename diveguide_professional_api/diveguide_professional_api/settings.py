@@ -5,11 +5,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TRUTHY = ('True', 'TRUE', 'true', True, 1, '1')
 DOCKERIZED = os.environ.get('DOCKERIZED', False) in TRUTHY
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-DEBUG = True
-
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+if DOCKERIZED:
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    DEBUG = os.environ.get("DEBUG", True) in TRUTHY
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+else:
+    SECRET_KEY = 'django-secret-key-dev-mode'
+    DEBUG = True
+    ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -19,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "professional",
+    "util",
     "rest_framework",
 ]
 

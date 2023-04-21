@@ -6,4 +6,5 @@ admin.site.site_header = "DiveGuide@Thailand Professionals Database"
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^api/", include("professional.urls", namespace="professionals")),
+    re_path(r"^util/", include("util.urls", namespace="util")),
 ]
