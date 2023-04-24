@@ -16,12 +16,12 @@ class UnaryClient:
         self.stub = pb2_grpc.ProfessionalUnaryStub(self.channel)
 
     def get_url(self, message):
-        print("Hello")
         pro_id = pb2.ProId(pro_id=message)
         return self.stub.GetProContactInfo(pro_id)
 
 
 client = UnaryClient()
-result = client.get_url(message=5)
-print("Happened")
-print(f"{result}")
+
+for i in range(4_000):
+    result = client.get_url(message=1)
+

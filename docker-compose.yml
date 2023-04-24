@@ -13,6 +13,7 @@ services:
       REDIS_PORT: 6379
     depends_on:
       - nginx
+      - redis
   web:
     build: diveguide_professional_api
     entrypoint: ["/entrypoint.sh"]
@@ -22,7 +23,6 @@ services:
       - 8000
     depends_on:
       - db
-      - redis
     env_file:
       - .env
     environment:
