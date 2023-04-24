@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  proxy:
+    build: diveguideth-professional-proxy
+    entrypoint: ["/entrypoint.sh"]
+    ports:
+      - '50051:50051'
+    environment:
+      DOCKERIZED: true
+      API_PORT: 80
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - nginx
+  web:
+    build: diveguide_professional_api
+    entrypoint: ["/entrypoint.sh"]
+    volumes:
+      - ./www:/www
+    expose:
+      - 8000
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    expose:
+      - 3306
+  redis:
+    image: redis:6.0.10
+    expose:
+      - 6379
+    volumes:
+      - redis_data:/data
+  nginx:
+    image: nginx:1.19.0
+    ports:
+      - '80:80'
+    volumes:
+      - ./diveguide_professional_api/config/nginx:/etc/nginx/conf.d
+      - ./diveguide_professional_api/www:/www
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  www:
+  redis_data:

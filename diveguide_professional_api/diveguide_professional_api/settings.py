@@ -1,18 +1,21 @@
 from pathlib import Path
 import os
+import socket
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-TRUTHY = ('True', 'TRUE', 'true', True, 1, '1')
-DOCKERIZED = os.environ.get('DOCKERIZED', False) in TRUTHY
+TRUTHY = ("True", "TRUE", "true", True, 1, "1")
+DOCKERIZED = os.environ.get("DOCKERIZED", False) in TRUTHY
 
 if DOCKERIZED:
     SECRET_KEY = os.environ.get("SECRET_KEY")
     DEBUG = os.environ.get("DEBUG", True) in TRUTHY
-    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+    ALLOWED_HOSTS = ["nginxproxyserver"]
+    CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1"]
 else:
-    SECRET_KEY = 'django-secret-key-dev-mode'
+    SECRET_KEY = "django-secret-key-dev-mode"
     DEBUG = True
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+    CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -65,15 +68,15 @@ if not DOCKERIZED:
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),
-            'PORT': os.environ.get('DB_PORT'),
-            'OPTIONS': {
-                'charset': 'utf8mb4',
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("DB_NAME"),
+            "USER": os.environ.get("DB_USER"),
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": os.environ.get("DB_PORT"),
+            "OPTIONS": {
+                "charset": "utf8mb4",
             },
         }
     }
@@ -101,6 +104,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '/www/static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = "/www/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
